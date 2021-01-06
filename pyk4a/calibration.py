@@ -66,11 +66,35 @@ class Calibration:
         _verify_error(res)
         return target_point_3d
 
+    def _convert_3d_to_2d(
+            self,
+            source_point_3d: Tuple[float, float, float],
+            source_camera: CalibrationType,
+            target_camera: CalibrationType,
+    ) -> Tuple[float, float]:
+        """
+            Transform a 3d point of a source coordinate system into a 3d
+            point of the target coordinate system.
+            :param source_point_3d  The 3D coordinates in millimeters representing a point in source_camera.
+            :param source_camera    The current camera.
+            :param target_camera    The target camera.
+            :return                 The 3D coordinates in millimeters representing a point in target camera.
+        """
+        res, valid,target_point_2d = k4a_module.calibration_3d_to_2d(
+            self._calibration_handle, self.thread_safe, source_point_3d, source_camera, target_camera,
+        )
+
+        _verify_error(res)
+        return target_point_2d
+
     def depth_to_color_3d(self, point_3d: Tuple[float, float, float]) -> Tuple[float, float, float]:
         return self._convert_3d_to_3d(point_3d, CalibrationType.DEPTH, CalibrationType.COLOR)
 
     def color_to_depth_3d(self, point_3d: Tuple[float, float, float]) -> Tuple[float, float, float]:
         return self._convert_3d_to_3d(point_3d, CalibrationType.COLOR, CalibrationType.DEPTH)
+
+    def convert_3d_to_2d(self, point_3d: Tuple[float, float, float]) -> Tuple[float, float]:
+        return self._convert_3d_to_2d(point_3d, CalibrationType.DEPTH, CalibrationType.COLOR)
 
     def _convert_2d_to_3d(
         self,

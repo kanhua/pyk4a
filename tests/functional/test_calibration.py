@@ -26,6 +26,26 @@ class TestCalibration:
         assert calibration
 
     @staticmethod
+    def test_convert_3d_to_2d():
+
+        from pyk4a import CalibrationType,PyK4APlayback
+
+        test_mkv_file = r"C:\Users\kanhu\Documents\2020-12-23data\tomita_20201223_2.mkv"
+
+        ppk = PyK4APlayback(test_mkv_file)
+        ppk.open()
+        calibration=ppk.calibration
+
+        original_2d_points=(100,100)
+        converted_3d_pts=calibration.convert_2d_to_3d(original_2d_points,300.0,CalibrationType.COLOR,CalibrationType.DEPTH)
+
+        converted_2d_pts=calibration.convert_3d_to_2d(converted_3d_pts)
+        print(converted_2d_pts)
+        ppk.close()
+        assert calibration
+
+
+    @staticmethod
     @pytest.mark.opengl
     def test_creating_transfromation_handle(calibration: Calibration):
         transformation = calibration.transformation_handle

@@ -1000,7 +1000,7 @@ extern "C" {
         k4a_float3_t target_point3d_mm;
 
         // to 3D input
-        PyArg_ParseTuple(args, "Op(ff)fII",
+        PyArg_ParseTuple(args, "Op(fff)II",
                 &capsule,
                 &thread_safe,
                 &source_point_x,
